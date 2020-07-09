@@ -1,5 +1,7 @@
 from room import Rooms
 from player import Player
+from item import Item
+import random
 
 # Declare all the rooms
 
@@ -35,6 +37,13 @@ room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
 #
+#  Items
+item = {
+    'scythe': Item('scythe',"""Death comes in many forms, today that can be you!"""),
+    'hi-point': Item('hi-point', """Only has one round in it, but hey just beat em with it."""),
+    'bottle': Item('bottle', """For the hard on their luck alcholic adventurer"""),
+    'alligator': Item('alligator', """Channel your inner Florida man.""")
+}
 # Main
 #
 
@@ -66,8 +75,14 @@ is_playing = True
 
 while is_playing:
     print(room[player.room])
+    room[player.room].loot = []
+    floor_loot = random.choice(list(item))
+    room[player.room].add_item(floor_loot)
+    print(f'There is a {floor_loot} on the floor')
+
+    
     # TODO: (the textwrap module might be useful here).
-    direction = input('Where do you want to go? N, E, S, W? To pickup or drop items use the command take "item" or drop "item"').lower().split()
+    direction = input('Where do you want to go? N, E, S, W? To pickup or drop items use takethe command take "item" or drop "item" To show your inventory enter "i"').lower().split()
     if direction[0] == 'n':
         if player.room == 'outside':
             player.room = 'foyer'
@@ -112,9 +127,14 @@ while is_playing:
             print(f'You dropped: {direction[1]}')
         else: direction =input('Well clearly you are an idiot! Do you want to try that again?')
     elif direction[0] == 'yeet':
-         if direction[1] in room[player.room].loot:
+        if direction[1] in player.inventory:
             player.drop_item(direction[1])
-            room[player.room].add_item(direction[1])
-            print(f'You yeeted: {direction[1]} into another dimension! Continue on baller!')
+            
+            print(f'You yeeted: {direction[1]} into another dimension! Thats a win from me dawg!')
+            player.room = 'treasure'
+        else: direction =input('You have nothing to yeet! RIP')
+    elif direction[0] == 'i' or direction[0] == 'inv' or direction[0] == 'inventory':
+        direction = input(f'You have the following items: {player.inventory}')
+
     else:
         direction = input('Please choose a valid direction, or press q to quit')

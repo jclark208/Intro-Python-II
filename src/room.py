@@ -10,7 +10,7 @@ class Rooms:
         self.w_to = w_to
         self.loot = []
     def __str__(self):
-        return f'This is the {self.name}. Description: {self.description} Holy crap there are a few items in here: {self.loot}'
+        return f'This is the {self.name}. Description: {self.description}'
         
     def remove_item(self, item):
         self.loot.remove(item)
